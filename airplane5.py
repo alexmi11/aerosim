@@ -9,10 +9,10 @@ polars = ht08.generate_polars(cache_filename=cache)
 
 airfoil = ht08
 if False:
-    airfoil =  asb.Airfoil("ht12", generate_polars=False)
+    airfoil =  asb.Airfoil("naca0012", generate_polars=False)
 
 def get_airplane_mass_props():
-    return asb.MassProperties(mass=0.005, x_cg = 0.1, y_cg = 0, z_cg = -0.05, Ixx=0.01, Ixy=0, Ixz=0, Iyy=0.01, Iyz=0, Izz=0.01)
+    return asb.MassProperties(mass=0.005, x_cg = 0.02, y_cg = 0, z_cg = -0.0, Ixx=0.00005, Ixy=0, Ixz=0, Iyy=0.00005, Iyz=0, Izz=0.00005)
 
 
 def make_airplane():
@@ -33,7 +33,7 @@ def make_airplane():
                 xsecs=[  # The wing's cross ("X") sections, or "XSecs"
                     asb.WingXSec(  # Root
                         xyz_le=[0, 0, 0],  # Coordinates of the XSec's leading edge relative to the wing's leading edge
-                        chord=0.25,
+                        chord=0.20,
                         twist=+2,  # in degrees
                         airfoil=airfoil,
                         control_surface_is_symmetric=True,  # Aileron
@@ -41,9 +41,9 @@ def make_airplane():
                         # (ctrl. surfs. are applied between this XSec and the next one.)
                     ),
                     asb.WingXSec(  # Tip
-                        xyz_le=[0.25, 0.09, 0.03],
-                        chord=0.01,
-                        twist=-20,
+                        xyz_le=[0.01, 0.1, 0.015],
+                        chord=0.2,
+                        twist=0,
                         airfoil=airfoil,
                     )
                 ]
@@ -71,12 +71,12 @@ def make_airplane():
                 xsecs=[
                     asb.WingXSec(
                         xyz_le=[0, 0, 0],
-                        chord=0.25,
+                        chord=0.2,
                         airfoil=airfoil
                     ),
                     asb.WingXSec(
-                        xyz_le=[0.25, 0, -0.06],
-                        chord=0.01,
+                        xyz_le=[0., 0, -0.05],
+                        chord=0.2,
                         airfoil=airfoil
                     )
                     

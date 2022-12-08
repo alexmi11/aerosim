@@ -6,11 +6,14 @@ from mpl_toolkits import mplot3d
 
 import matplotlib.pyplot as plt;
 import aerosandbox.tools.pretty_plots as p
-from aerosandbox.aerodynamics.aero_3D.test_aero_3D.geometries.conventional import airplane
+#from aerosandbox.aerodynamics.aero_3D.test_aero_3D.geometries.conventional import airplane
+#import airplane
 import airplane2
+import airplane3
+import airplane4
+import airplane5
 #from aerosandbox.tools.pretty_plots import plt, show_plot, contour, equal, set_ticks
 
-mass = 0.005 #mass of paper
 
 
 #u_e_0 = 100
@@ -20,9 +23,11 @@ mass = 0.005 #mass of paper
 #gamma_0 = np.arctan2(-w_e_0, u_e_0)
 #track_0 = 0
 
-time_a = np.linspace(0, 5, 100)
+time_a = np.linspace(0, 3, 100)
 import time
 start_time = time.time()
+
+airplane = airplane5
 
 
 def get_trajectory(
@@ -32,27 +37,28 @@ def get_trajectory(
         plot=False
 ):
     dyn = asb.DynamicsRigidBody3DBodyEuler(
-        mass_props=asb.MassProperties(mass=mass, x_cg = 0.05, y_cg = 0, z_cg = -0.02, Ixx=0.01, Ixy=0, Ixz=0, Iyy=0.01, Iyz=0, Izz=0.01),
+        mass_props=airplane.get_airplane_mass_props(),
         x_e = 0,
         y_e = 0,
-        z_e = -1.5,
-        u_b = 20, #20 to 40 meters per second
+        z_e = -3,
+        u_b = 10, #20 to 40 meters per second for airplane. 0 for maple leaf
         v_b = 0,
         w_b = 0,
-        phi = np.deg2rad(0), # make this 0 to have normal trajectory . 10 produces a nice rolling effect.
-        theta = np.deg2rad(0), 
+        phi = np.deg2rad(10), # make this 0 to have normal trajectory . 10 produces a nice rolling effect.
+        theta = np.deg2rad(10), # 10 can make loop
         psi = np.deg2rad(0),
         p = 0,
         q = 0,
-        r = 0,
+        r = 0, # make this aroud 1000 to spin up maple seed
     )
+
 
     def derivatives(t, y):
         this_dyn = dyn.get_new_instance_with_state(y)
         #print(this_dyn.state["z_e"])
 
         aero = asb.AeroBuildup(
-            airplane=airplane2.make_airplane(),
+            airplane=airplane.make_airplane(),
             #airplane = airplane,
             op_point=asb.OperatingPoint(
                 velocity=this_dyn.speed, #is this the right frame, or do we want relative to the wind?
@@ -89,7 +95,7 @@ def get_trajectory(
     def eventAttr():
         def decorator(func):
             func.direction = 1
-            func.terminal = False
+            func.terminal = True
             return func
         return decorator
 
@@ -122,25 +128,36 @@ def get_trajectory(
     print("--- %s seconds ---" % (time.time() - start_time))
 
     if plot:
-        #fig, ax = plt.subplots()
-        #p.plot_color_by_value(dyn.x_e, dyn.altitude, c=dyn.speed, colorbar=True)
-        #p.equal()
-        #p.show_plot("Trajectory", "$x_e$", "$z_e$")
+        fig, ax = plt.subplots()
+        p.plot_color_by_value(dyn.x_e, dyn.altitude, c=dyn.speed, colorbar=True)
+        p.equal()
+        p.show_plot("Trajectory", "$x_e$", "$z_e$")
 
-        ax = plt.axes(projection='3d')
-        ax.plot3D(dyn.x_e, dyn.y_e, dyn.altitude)
-        ax.set_xlabel('$X$')
-        ax.set_ylabel('$Y$')
-        ax.set_zlabel('$Z$')
-        plt.show()
+        # ax = plt.axes(projection='3d')
+        # ax.plot3D(dyn.x_e, dyn.y_e, dyn.altitude)
+        # ax.set_xlabel('$X$')
+        # ax.set_ylabel('$Y$')
+        # ax.set_zlabel('$Z$')
+        # plt.show()
 
     return dyn
 
-get_trajectory(
+
+
+dyn = get_trajectory(
         gravity=True,
         drag=True,
         sideforce=True,
         plot=True)
+
+plotter = dyn.draw(
+    vehicle_model=airplane.make_airplane(),
+    scale_vehicle_model=5,
+    n_vehicles_to_draw=10,
+    show=True
+)
+#plotter.show(jupyter_backend="static")
+
 
 
 

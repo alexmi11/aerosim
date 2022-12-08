@@ -12,7 +12,7 @@ if False:
     airfoil =  asb.Airfoil("ht12", generate_polars=False)
 
 def get_airplane_mass_props():
-    return asb.MassProperties(mass=0.005, x_cg = 0.1, y_cg = 0, z_cg = -0.05, Ixx=0.01, Ixy=0, Ixz=0, Iyy=0.01, Iyz=0, Izz=0.01)
+    return asb.MassProperties(mass=0.005, x_cg = 0.08, y_cg = 0, z_cg = -0.02, Ixx=0.01, Ixy=0, Ixz=0, Iyy=0.01, Iyz=0, Izz=0.01)
 
 
 def make_airplane():
@@ -41,7 +41,7 @@ def make_airplane():
                         # (ctrl. surfs. are applied between this XSec and the next one.)
                     ),
                     asb.WingXSec(  # Tip
-                        xyz_le=[0.25, 0.09, 0.03],
+                        xyz_le=[0.25, 0.05, 0.015],
                         chord=0.01,
                         twist=-20,
                         airfoil=airfoil,
@@ -75,7 +75,7 @@ def make_airplane():
                         airfoil=airfoil
                     ),
                     asb.WingXSec(
-                        xyz_le=[0.25, 0, -0.06],
+                        xyz_le=[0.25, 0, -0.05],
                         chord=0.01,
                         airfoil=airfoil
                     )

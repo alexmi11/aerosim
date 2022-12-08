@@ -2,6 +2,8 @@ import aerosandbox as asb
 import aerosandbox.numpy as np
 
 # Select Notebook kernel using shortcut Ctrl + Shift + P
+def get_airplane_mass_props():
+    return asb.MassProperties(mass=0.005, x_cg = 0.05, y_cg = 0, z_cg = -0.02, Ixx=0.01, Ixy=0, Ixz=0, Iyy=0.01, Iyz=0, Izz=0.01)
 
 
 def make_airplane():

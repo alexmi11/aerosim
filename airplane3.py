@@ -4,14 +4,21 @@ import aerosandbox.numpy as np
 # Select Notebook kernel using shortcut Ctrl + Shift + P
 
 
+def get_airplane_mass_props():
+    return asb.MassProperties(mass=0.002, x_cg=0.003, y_cg = 0.005, z_cg = 0, Ixx=1.8e-06, Ixy=0, Ixz=0, Iyy=1.8e-06, Iyz=0, Izz=1.8e-06)
+
+
 # total mass = 0.0002 #, 195mg https://www.fzt.haw-hamburg.de/pers/Scholz/arbeiten/TextDesenfans.pdf
 # cm at [0.005, 0, 0] 
 #preliminary falling speed is around  1m/s
 def make_airplane():
     # Here, all distances are in meters and all angles are in degrees.
     airplane = asb.Airplane(
-        name="Example Airplane",
-        xyz_ref=[0.5, 0, 0],  # Reference for moments
+        name="Maple Leaf",
+        
+        xyz_ref= [get_airplane_mass_props().x_cg, 
+                    get_airplane_mass_props().y_cg, 
+                    get_airplane_mass_props().z_cg] ,  # Reference for moments
         s_ref=9,  # Reference area
         c_ref=0.9,  # Reference chord
         b_ref=10,  # Reference span
@@ -60,20 +67,20 @@ def make_airplane():
                     asb.WingXSec(  # Mid
                         xyz_le=[0.001, 0.019, 0],
                         chord=0.013, # https://www.fzt.haw-hamburg.de/pers/Scholz/arbeiten/TextDesenfans.pdf
-                        twist=-1,
+                        twist=2,
                         airfoil=asb.Airfoil("naca2408"),
                     ),#.translate([0.003, 0.013, 0]),
 
                     asb.WingXSec(  # Mid
                         xyz_le=[0.00, 0.023, 0],
                         chord=0.012, # https://www.fzt.haw-hamburg.de/pers/Scholz/arbeiten/TextDesenfans.pdf
-                        twist=-1,
+                        twist=2,
                         airfoil=asb.Airfoil("naca2408"),
                     ),#.translate([0.003, 0.013, 0]),
                     asb.WingXSec(  # Tip
                         xyz_le=[-0.002, 0.028, 0.0],
                         chord=0.006, # https://www.fzt.haw-hamburg.de/pers/Scholz/arbeiten/TextDesenfans.pdf
-                        twist=-1,
+                        twist=2,
                         airfoil=asb.Airfoil("naca2408"),
                     ),#.translate([0.00, 0.028, 0.0])
                 ]
@@ -98,6 +105,11 @@ def make_airplane():
 
 if __name__ == '__main__':
     airplane = make_airplane()
+
+    print( 0.002 * (0.03)**2)
+
+    print()
+    print(get_airplane_mass_props())
 
     airplane.draw(
         show_kwargs={"jupyter_backend": "static"}  # Ignore this; this is just so the tutorial shows a picture
