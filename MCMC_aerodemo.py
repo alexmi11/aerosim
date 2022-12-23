@@ -16,21 +16,16 @@ import airplane5
 
 
 
-#u_e_0 = 100
-#v_e_0 = 0
-#w_e_0 = -100
-#speed_0 = (u_e_0 ** 2 + w_e_0 ** 2) ** 0.5
-#gamma_0 = np.arctan2(-w_e_0, u_e_0)
-#track_0 = 0
-
 time_a = np.linspace(0, 1.5, 100)
 import time
 start_time = time.time()
 
-airplane = airplane3
+airplane = airplane4
 
 
 def get_trajectory(
+        v_0, 
+        theta_new,
         gravity=True,
         drag=True,
         sideforce=True,
@@ -41,15 +36,15 @@ def get_trajectory(
         x_e = 0,
         y_e = 0,
         z_e = -3,
-        u_b = 0.01, #20 to 40 meters per second for airplane. 0 for maple leaf
+        u_b = v_0, #20 to 40 meters per second for airplane. 0 for maple leaf
         v_b = 0,
         w_b = 0,
         phi = np.deg2rad(0), # make this 0 to have normal trajectory . 10 produces a nice rolling effect.
-        theta = np.deg2rad(0), # 10 can make loop
+        theta = np.deg2rad(theta_new), # 10 can make loop
         psi = np.deg2rad(0),
         p = 0,
         q = 0,
-        r = -200, # make this aroud -200 to spin up maple seed, if up to -10000, then it gets lift and goes up.
+        r = 0, # make this aroud -200 to spin up maple seed, if up to -10000, then it gets lift and goes up.
     )
 
 
@@ -95,7 +90,7 @@ def get_trajectory(
     def eventAttr():
         def decorator(func):
             func.direction = 1
-            func.terminal = False
+            func.terminal = True
             return func
         return decorator
 
@@ -144,19 +139,58 @@ def get_trajectory(
 
 
 
-dyn = get_trajectory(
-        gravity=True,
-        drag=True,
-        sideforce=True,
-        plot=True)
 
-plotter = dyn.draw(
-    vehicle_model=airplane.make_airplane(),
-    #scale_vehicle_model=5,
-    n_vehicles_to_draw=200,
-    show=True
-)
+
+# plotter = dyn.draw(
+#     vehicle_model=airplane.make_airplane(),
+#     #scale_vehicle_model=5,
+#     n_vehicles_to_draw=6,
+#     show=True
+# )
 #plotter.show(jupyter_backend="static")
+
+
+def vizualize_distribution ():
+    v_min = 17
+    v_max = 23
+    theta_min = -10
+    theta_max = 80
+    ops = []
+
+    for i in range (50):
+        print(i)
+        v_0 = np.random.uniform(low=v_min, high=v_max)
+        theta_new = np.random.uniform(low=theta_min, high=theta_max)
+
+        dyn = get_trajectory(
+            v_0, 
+            theta_new,
+            gravity=True,
+            drag=True,
+            sideforce=True,
+            plot=False, 
+        )
+
+        ops.append((dyn.x_e[-1], theta_new))
+        ops.sort(key = lambda x: x[0])
+        ops.reverse()
+        print(ops)
+
+    plt.xlabel("Throwing angle, degrees")
+    plt.ylabel("Distance Traveled, m")
+    plt.scatter(list(zip(*ops))[1], list(zip(*ops))[0])
+    plt.savefig("dart_distribution.png")
+    plt.show()
+
+
+
+vizualize_distribution()
+
+
+
+
+
+
 
 
 

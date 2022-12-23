@@ -8,17 +8,17 @@ ht08 = asb.Airfoil("ht08", generate_polars=False)
 polars = ht08.generate_polars(cache_filename=cache)
 
 airfoil = ht08
-if False:
+if True: #when set to true this uses fast model instead of aerobuildup
     airfoil =  asb.Airfoil("ht12", generate_polars=False)
 
 def get_airplane_mass_props():
-    return asb.MassProperties(mass=0.005, x_cg = 0.08, y_cg = 0, z_cg = -0.02, Ixx=0.01, Ixy=0, Ixz=0, Iyy=0.01, Iyz=0, Izz=0.01)
+    return asb.MassProperties(mass=0.005, x_cg = 0.08, y_cg = 0, z_cg = -0.02, Ixx=0.00005, Ixy=0, Ixz=0, Iyy=0.00005, Iyz=0, Izz=0.00005)
 
 
 def make_airplane():
     # Here, all distances are in meters and all angles are in degrees.
     airplane = asb.Airplane(
-        name="Paper flier",
+        name="Paper dart",
         xyz_ref= [get_airplane_mass_props().x_cg, 
                     get_airplane_mass_props().y_cg, 
                     get_airplane_mass_props().z_cg] ,  # Reference for moments
